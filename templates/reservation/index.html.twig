@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservations
+{% endblock %}
+
+{% block body %}
+	<h1>Reservations</h1>
+
+	<form method="get" action="{{ path('reservations_index') }}">
+		<input type="text" name="search" placeholder="Search..." value="{{ searchTerm }}">
+		<button type="submit">Search</button>
+	</form>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Localizador</th>
+				<th>Huesped</th>
+				<th>Fecha de entrada</th>
+				<th>Fecha de salida</th>
+				<th>Hotel</th>
+				<th>Precio</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for reservation in reservations %}
+				<tr>
+					<td>{{ reservation.localizador }}</td>
+					<td>{{ reservation.huesped }}</td>
+					<td>{{ reservation.fecha_de_entrada }}</td>
+					<td>{{ reservation.fecha_de_salida }}</td>
+					<td>{{ reservation.hotel }}</td>
+					<td>{{ reservation.precio }}</td>
+					<td>{{ reservation.posibles_acciones }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('reservations_download') }}">Download as JSON</a>
+{% endblock %}
