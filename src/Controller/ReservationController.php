@@ -61,20 +61,28 @@ class ReservationController extends AbstractController
      * Convierte las reservas en formato JSON y permite descargarlas.
      */
     #[Route('/reservations/download', name: 'reservations_download', methods: ['GET'])]
-    public function download(): Response
+    public function download(Request $request): Response
     {
         // Obtiene todas las reservas desde el archivo CSV
         $reservations = $this->csvReader->getReservations();
 
-        // Convierte el array de reservas a formato JSON con formato legible
-        $json = json_encode($reservations, JSON_PRETTY_PRINT);
+        // Obtiene el término de búsqueda de la URL
+        $searchTerm = $request->query->get('search');
 
-        // Crea una respuesta HTTP con el JSON como contenido
+        // Filtra las reservas si hay un término de búsqueda
+        if ($searchTerm) {
+            $reservations = array_filter($reservations, function ($reservation) use ($searchTerm) {
+                return stripos(implode(' ', $reservation), $searchTerm) !== false;
+            });
+        }
+
+        // Convierte el array filtrado a formato JSON
+        $json = json_encode(array_values($reservations), JSON_PRETTY_PRINT);
+
+        // Crea la respuesta con el JSON y cabeceras adecuadas
         $response = new Response($json);
-
-        // Establece las cabeceras para indicar que es un archivo JSON descargable
         $response->headers->set('Content-Type', 'application/json');
-        $response->headers->set('Content-Disposition', 'attachment; filename="reservations.json"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="filtered_reservations.json"');
 
         return $response;
     }

@@ -38,5 +38,7 @@
 		</tbody>
 	</table>
 
-	<a href="{{ path('reservations_download') }}">Download as JSON</a>
+	<a href="{{ path('reservations_download', { search: searchTerm }) }}">
+		Descargar CSV
+	</a>
 {% endblock %}

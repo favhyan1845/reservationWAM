@@ -8,12 +8,20 @@ class CsvReader
 {
     private string $csvFilePath;
 
+    /**
+     * Constructor del controlador.
+     * Symfony inyectará el servicio KernelInterface automáticamente.
+     */
     public function __construct(KernelInterface $kernel)
     {
         // Obtiene la ruta absoluta del archivo CSV
         $this->csvFilePath = $kernel->getProjectDir() . '/public/reservations.csv';
     }
 
+    /**
+     * Servicio para leer el archivo CSV.
+     * 
+     */
     public function getReservations(): array
     {
         $reservations = [];
